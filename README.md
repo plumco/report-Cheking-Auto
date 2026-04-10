@@ -1,75 +1,64 @@
-# 🏗️ Huliot India — Site Visit Report Formatter + AI Comment Fixer
+# Huliot India — Report Formatter & AI Comment Improver
 
 ## What This App Does
 
-1. **Upload** any team PPTX report
-2. **Auto-fixes** all format issues:
-   - Banner text → "Site Visit"  
-   - Time format → "10:30am to 01:30pm"
-   - Title font → 32pt
-   - Body text → 18–20pt
-   - Images → max 5" wide, 4.5" tall
-   - Label "Client" → "Plumbers :-"
-   - Spelling errors ("PRL ines" → "PRL lines")
-3. **AI rewrites** observation comments to professional standard
-4. **You review** and edit comments in the app
-5. **Download** the perfectly formatted PPTX — ready to send to client
+| Feature | Details |
+|---------|---------|
+| **Cover Slide Fix** | Banner → "Site Visit", Time → am/pm format, Date spacing, "Client" → "Plumbers" |
+| **Font Standardise** | All slides get correct Huliot font sizes (heading 32pt, body 14pt, etc.) |
+| **Photo Standardise** | All observation slide photos set to standard size & position |
+| **AI Comments** | Claude AI rewrites observation text in Huliot professional style |
+| **Review Before Apply** | You see Original vs AI side-by-side, edit if needed, then download |
 
----
+## Font Standards Applied
 
-## Setup (One Time — 2 Minutes)
+| Element | Size | Style |
+|---------|------|-------|
+| Cover heading | 36pt | Bold White |
+| Cover body | 18pt | Bold White |
+| Green banner | 28pt | Bold White |
+| Explain heading | 32pt | Bold Dark Green |
+| Explain body | 14pt | Regular |
+| Observation comment | 14pt | Regular |
 
-### Requirements
-- Python 3.9 or higher installed on your laptop
-- Internet connection (for AI comment improvement)
+## Photo Standard Layout (per observation slide)
 
-### Steps
-
-**Step 1 — Unzip this folder**
-
-**Step 2 — Open Command Prompt in this folder**
-Right-click inside the folder → "Open in Terminal" (Windows) or "New Terminal at Folder" (Mac)
-
-**Step 3 — Install dependencies**
 ```
+|  Photo 1 (site)  |  Photo 2 (site)  |  Drawing (ref)  |
+|   4.1" × 4.9"   |   4.1" × 4.9"   |   4.3" × 4.9"  |
+     Top: 1.75" from top of slide
+```
+
+## Setup (One Time Only)
+
+```bash
 pip install -r requirements.txt
 ```
 
-**Step 4 — Run the app**
-```
+## Run
+
+```bash
 streamlit run app.py
 ```
 
-The app opens automatically in your browser at: http://localhost:8501
+## How to Use
+
+1. **Enter API Key** in the sidebar (optional — for AI comments)
+2. **Upload** the team .pptx report
+3. Click **Run Format Fix** — fixes cover, fonts, photo sizes
+4. Click **Generate AI Comments** — AI rewrites observation text
+5. **Review** each AI comment side-by-side, edit if needed
+6. Click **Build Final File** → **Download**
+7. Open in PowerPoint → fill Checklist Yes/NO → send to client
+
+## AI Comment Style
+
+The AI writes comments in the exact Huliot professional format:
+- "It has been observed that..."
+- "Kindly ensure clamp supports are fixed as per Huliot Table..."
+- "Rectify the same at the earliest."
+
+You always review and can edit before the final file is created.
 
 ---
-
-## Daily Use
-
-1. Run: `streamlit run app.py`
-2. Upload team PPTX
-3. Click **Fix Format & Improve Comments**
-4. Review AI comments (edit if needed)
-5. Click **Generate Final File**
-6. Download → open in PowerPoint → quick check → send to client
-
----
-
-## What Gets Fixed Automatically
-
-| Issue | Fixed |
-|-------|-------|
-| Green banner wrong text | ✅ Auto |
-| Time format (dots/caps) | ✅ Auto |
-| Date spacing error | ✅ Auto |
-| "Client" label | ✅ Auto |
-| Spelling errors | ✅ Auto |
-| Font sizes (title/body) | ✅ Auto |
-| Oversized photos | ✅ Auto |
-| Observation comments | 🤖 AI + Your review |
-| Checklist Yes/NO | ✏️ Manual in PowerPoint |
-
----
-
-## Support
-Mr. Umesh Nikam — Ass. Technical Manager, Huliot Pipes & Fittings Pvt. Ltd.
+Umesh Nikam | Ass. Technical Manager | Huliot Pipes & Fittings Pvt. Ltd.
