@@ -4,55 +4,85 @@ from pptx.util import Inches, Pt
 from pptx.enum.text import PP_ALIGN
 import io
 
+def fix_front_page(slide):
+    """Specifically targets and positions elements on the title slide."""
+    
+    for shape in slide.shapes:
+        if not shape.has_text_frame:
+            continue
+            
+        text = shape.text_frame.text.lower()
+        
+        # 1. Header Block (Huliot India, Date, Time)
+        # Moving it to the Top-Left
+        if "date:-" in text and "time:-" in text:
+            shape.left = Inches(0.5)
+            shape.top = Inches(0.8)
+            shape.width = Inches(5.0)
+            
+            # Standardize font size
+            for paragraph in shape.text_frame.paragraphs:
+                paragraph.font.size = Pt(20)
+                paragraph.font.bold = True
+                paragraph.alignment = PP_ALIGN.LEFT
+
+        # 2. Main Title Bar (Site Visit / Shiv Sai Paradies)
+        # Moving it to the Center Horizontal Bar
+        elif "site visit" in text or "shiv sai" in text:
+            shape.left = Inches(3.0)
+            shape.top = Inches(3.2)
+            shape.width = Inches(5.0)
+            
+            for paragraph in shape.text_frame.paragraphs:
+                paragraph.font.size = Pt(28)
+                paragraph.font.bold = True
+                paragraph.alignment = PP_ALIGN.CENTER
+
+        # 3. Details Bullet List (Site Name, Location, Members Present)
+        # Moving it to the Bottom-Center/Right Area
+        elif "location" in text and "members present" in text:
+            shape.left = Inches(3.2)
+            shape.top = Inches(4.2)
+            shape.width = Inches(6.5)
+            
+            for paragraph in shape.text_frame.paragraphs:
+                paragraph.font.size = Pt(14)
+                paragraph.font.bold = True
+                paragraph.alignment = PP_ALIGN.LEFT
+
 def standardize_report(uploaded_file):
-    # Load the uploaded presentation
     prs = Presentation(uploaded_file)
     
-    # Iterate through slides and shapes to apply standard formatting
-    for slide in prs.slides:
-        for shape in slide.shapes:
-            
-            # Example 1: Fix Text Formatting (e.g., Checklist alignment)
-            if shape.has_text_frame:
-                for paragraph in shape.text_frame.paragraphs:
-                    # Target the checklist points
-                    if "Yes / NO" in paragraph.text or "Yes/ No" in paragraph.text:
-                        paragraph.font.size = Pt(12)
-                        paragraph.alignment = PP_ALIGN.LEFT
-            
-            # Example 2: Anchor/Resize Images (e.g., Logo)
-            # Shape type 13 indicates a picture
-            if shape.shape_type == 13: 
-                # Note: You can add specific size/location logic here. 
-                # This ensures an image doesn't exceed a certain width.
-                if shape.width > Inches(6):
-                    shape.width = Inches(5)
-
-    # Save to a memory buffer so the user can download it directly
+    # Apply the strict layout fix ONLY to the first slide (index 0)
+    if len(prs.slides) > 0:
+        fix_front_page(prs.slides[0])
+    
+    # Save to buffer
     pptx_io = io.BytesIO()
     prs.save(pptx_io)
     return pptx_io
 
-# --- Streamlit UI Configuration ---
-st.set_page_config(page_title="Huliot Report Editor", layout="wide")
+# --- Streamlit UI ---
+st.set_page_config(page_title="Huliot Front Page Fixer", layout="wide")
 
-st.title("🏗️ Huliot India: Report Formatting App")
-st.subheader("Phase 1: Standard Format Correction")
-st.info("Upload a draft Site Visit Report. This tool will auto-align the checklist and standardize image boundaries.")
+st.title("🏗️ Huliot India: Report Formatter")
+st.error("Targeting specific misalignments on the Title Page")
 
-# File Uploader
+st.markdown("""
+This updated script does not just format text; it physically relocates the **Header**, **Center Title**, and **Details List** back to their designated template coordinates.
+""")
+
 uploaded_file = st.file_uploader("Upload your 'Stretched' PPTX Report", type="pptx")
 
-# Action Button
 if uploaded_file:
-    if st.button("Standardize Format"):
-        with st.spinner("Aligning elements to standard format..."):
+    if st.button("Fix Layout"):
+        with st.spinner("Snapping elements back to template grid..."):
             fixed_pptx = standardize_report(uploaded_file)
             
-            st.success("Format Standardized Successfully!")
+            st.success("Layout Fixed!")
             st.download_button(
-                label="📥 Download Standardized Report",
+                label="📥 Download Corrected Report",
                 data=fixed_pptx.getvalue(),
-                file_name="Standardized_Site_Visit_Report.pptx",
+                file_name="Fixed_Huliot_Report.pptx",
                 mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
             )
