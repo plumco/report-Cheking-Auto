@@ -5,7 +5,7 @@ from pptx.enum.text import PP_ALIGN
 import io
 
 def fix_front_page(slide):
-    """Specifically targets and positions elements on the title slide."""
+    """Specifically targets and positions elements to match the Huliot Template."""
     
     for shape in slide.shapes:
         if not shape.has_text_frame:
@@ -13,41 +13,36 @@ def fix_front_page(slide):
             
         text = shape.text_frame.text.lower()
         
-        # 1. Header Block (Huliot India, Date, Time)
-        # Moving it to the Top-Left
+        # 1. Header Block (Huliot India, Date, Time) -> Top Left
         if "date:-" in text and "time:-" in text:
-            shape.left = Inches(0.5)
+            shape.left = Inches(0.4)
             shape.top = Inches(0.8)
-            shape.width = Inches(5.0)
+            shape.width = Inches(5.0) 
             
-            # Standardize font size
+            # Force left alignment
             for paragraph in shape.text_frame.paragraphs:
-                paragraph.font.size = Pt(20)
-                paragraph.font.bold = True
                 paragraph.alignment = PP_ALIGN.LEFT
 
-        # 2. Main Title Bar (Site Visit / Shiv Sai Paradies)
-        # Moving it to the Center Horizontal Bar
-        elif "site visit" in text or "shiv sai" in text:
-            shape.left = Inches(3.0)
-            shape.top = Inches(3.2)
+        # 2. Main Title Bar (Site Visit / Project Name) -> Center vertical, Middle horizontal
+        # We check that it's NOT the details block by ensuring "location" isn't in it
+        elif ("site visit" in text or "shiv sai" in text) and "location" not in text:
+            shape.left = Inches(2.5)
+            shape.top = Inches(2.8)
             shape.width = Inches(5.0)
             
+            # Force center alignment for the title
             for paragraph in shape.text_frame.paragraphs:
-                paragraph.font.size = Pt(28)
-                paragraph.font.bold = True
                 paragraph.alignment = PP_ALIGN.CENTER
 
-        # 3. Details Bullet List (Site Name, Location, Members Present)
-        # Moving it to the Bottom-Center/Right Area
-        elif "location" in text and "members present" in text:
+        # 3. Details Bullet List -> Pushed Down and Right, but Left-Aligned text
+        elif "site name:-" in text or "location" in text or "members present" in text:
+            # Push the box down to Inches(4.2) so it doesn't hit the Title Bar
             shape.left = Inches(3.2)
-            shape.top = Inches(4.2)
-            shape.width = Inches(6.5)
+            shape.top = Inches(4.0)
+            shape.width = Inches(6.5) # Wide enough to stop text from wrapping awkwardly
             
+            # Force left alignment for the bullet points
             for paragraph in shape.text_frame.paragraphs:
-                paragraph.font.size = Pt(14)
-                paragraph.font.bold = True
                 paragraph.alignment = PP_ALIGN.LEFT
 
 def standardize_report(uploaded_file):
@@ -66,23 +61,15 @@ def standardize_report(uploaded_file):
 st.set_page_config(page_title="Huliot Front Page Fixer", layout="wide")
 
 st.title("🏗️ Huliot India: Report Formatter")
-st.error("Targeting specific misalignments on the Title Page")
+st.subheader("Targeting: Template Alignment Fixes")
 
 st.markdown("""
-This updated script does not just format text; it physically relocates the **Header**, **Center Title**, and **Details List** back to their designated template coordinates.
+This app reads the text boxes on your draft's first slide and snaps them into the exact coordinates of the standard Huliot visual template.
 """)
 
 uploaded_file = st.file_uploader("Upload your 'Stretched' PPTX Report", type="pptx")
 
 if uploaded_file:
-    if st.button("Fix Layout"):
-        with st.spinner("Snapping elements back to template grid..."):
+    if st.button("Format Slide to Template"):
+        with st.spinner("Re-aligning text boxes to standard template..."):
             fixed_pptx = standardize_report(uploaded_file)
-            
-            st.success("Layout Fixed!")
-            st.download_button(
-                label="📥 Download Corrected Report",
-                data=fixed_pptx.getvalue(),
-                file_name="Fixed_Huliot_Report.pptx",
-                mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
-            )
