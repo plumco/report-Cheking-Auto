@@ -1,109 +1,129 @@
 import streamlit as st
+import datetime
 
-# Configure the page to a wide layout to better match a presentation slide feel
-st.set_page_config(page_title="Huliot Site Visit Report Editor", layout="wide")
-
-# Inject Custom CSS to match fonts and positioning styling
+# --- Custom CSS for Styling ---
+# This replicates the fonts and dark green theme from the sample report
+st.set_page_config(page_title="Huliot India Site Visit Report", layout="wide")
 st.markdown("""
     <style>
-    /* Base font styling to match typical presentation fonts */
-    html, body, [class*="css"]  {
-        font-family: 'Segoe UI', Arial, sans-serif;
-    }
-    
-    /* Huliot Green styling for headers */
     .huliot-header {
-        color: #007A53; /* Adjust to exact Huliot Green */
-        font-weight: bold;
-        border-bottom: 2px solid #007A53;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-    }
-    
-    .section-title {
-        background-color: #007A53;
+        background-color: #005643; /* Dark green from Huliot logo */
         color: white;
-        padding: 10px;
+        padding: 20px;
+        text-align: center;
         border-radius: 5px;
-        margin-top: 20px;
-        margin-bottom: 20px;
+        font-family: sans-serif;
+    }
+    .slide-title {
+        color: #005643;
+        font-weight: bold;
+        border-bottom: 2px solid #005643;
+        padding-bottom: 10px;
+    }
+    .stRadio label {
+        font-weight: bold;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# --- FRONT PAGE ---
-st.markdown("<h1 class='huliot-header'>Huliot India - Site Visit Report</h1>", unsafe_allow_html=True)
+# --- Sidebar Navigation ---
+st.sidebar.image("https://via.placeholder.com/300x100.png?text=Huliot+India+Logo", use_container_width=True) # Replace with actual logo path
+st.sidebar.title("Report Navigation")
+slide = st.sidebar.radio("Go to Slide:", [
+    "1. Cover Page", 
+    "2. Visit Details", 
+    "3. Site Photo", 
+    "4. Installation Instructions", 
+    "5. Joining Method", 
+    "6. Bracketing & Support", 
+    "7. Tools (Cutters)", 
+    "8. Trap Inlet Tools", 
+    "9. Trap Inlet Method", 
+    "10. Drainage Checklist", 
+    "11. PRL Line Options", 
+    "12. Sign-off"
+])
 
-# --- SITE DETAILS SECTION ---
-st.markdown("<h3 class='section-title'>Site Information</h3>", unsafe_allow_html=True)
-col1, col2 = st.columns(2)
+# --- Slide 1: Cover Page ---
+if slide == "1. Cover Page":
+    st.markdown('<div class="huliot-header"><h1>Site Visit</h1></div>', unsafe_allow_html=True) #
+    st.image("https://via.placeholder.com/1200x400.png?text=Huliot+India+Logo", use_container_width=True) #
 
-with col1:
-    report_date = st.date_input("Date")
-    site_name = st.text_input("Site Name")
+# --- Slide 2: Visit Details ---
+elif slide == "2. Visit Details":
+    st.markdown('<h2 class="slide-title">Huliot India Site Visit Details</h2>', unsafe_allow_html=True)
     
-with col2:
-    time_range = st.text_input("Time", value="00:00am to 00:00pm")
-    location = st.text_input("Location")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.date_input("Date:-", datetime.date(2026, 4, 10)) #
+        st.time_input("Time:-") #
+        st.text_input("Site Name:-") #
+        st.text_input("Location :-") #
+    
+    with col2:
+        st.markdown("**Members Present During Site visit/ Mock up/ Testing/ Inspection**") #
+        st.text_input("Huliot India – Mr.") #
+        st.text_input("Contractor : Mr.") #
+        st.text_input("Plumbers: - Mr.") #
 
-# --- MEMBERS PRESENT ---
-st.markdown("<h3 class='section-title'>Members Present During Site Visit / Mock up / Testing / Inspection</h3>", unsafe_allow_html=True)
-col3, col4, col5 = st.columns(3)
+# --- Slide 3: Site Photo ---
+elif slide == "3. Site Photo":
+    st.markdown('<h2 class="slide-title">Site Photo</h2>', unsafe_allow_html=True) #
+    st.write("**SH: 01**") #
+    st.info("Please upload or insert site photos here.")
+    st.file_uploader("Upload Site Photo", type=["jpg", "png", "jpeg"])
 
-with col3:
-    huliot_rep = st.text_input("Huliot India – Mr.")
-with col4:
-    contractor = st.text_input("Contractor : Mr.")
-with col5:
-    plumber = st.text_input("Plumbers: - Mr.")
+# --- Slide 4: Installation Instructions ---
+elif slide == "4. Installation Instructions":
+    st.markdown('<h2 class="slide-title">Explain - Installation instruction</h2>', unsafe_allow_html=True) #
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.image("https://via.placeholder.com/400x300.png?text=Pipe+Cutter", caption="Suitable Pipe Cutter")
+        st.write("Cut the Huliot pipe using suitable pipe cutter available in market or a fine-tooth saw that is suitably guided to guarantee a perpendicular cut.") #
+    with col2:
+        st.image("https://via.placeholder.com/400x300.png?text=Chamfering+Tool", caption="Chamfering Tool")
+        st.write("Chamfering and bevelling the Huliot pipe ends to an angle of roughly 15° to 30° using a suitable chamfered surface must be smooth to avoid damaging the socket when the pipe is inserted.") #
 
-st.divider()
+# --- Slide 5: Joining Method ---
+elif slide == "5. Joining Method":
+    st.markdown('<h2 class="slide-title">Explain - Installation method</h2>', unsafe_allow_html=True) #
+    
+    st.write("1. Join the pipe and fittings together by inserting the end /spigot into the socket to maximum socket depth.") #
+    st.write("2. Ensure that the inside of the socket, the seal and spigot/end of the pipe piece to be inserted are perfectly clean.") #
+    st.write("3. Lubricate the spigot/pipe/fitting end and rubber ring with the appropriate Huliot Lubricant only.") #
+    
+    col1, col2 = st.columns(2)
+    col1.image("https://via.placeholder.com/400x300.png?text=Inserting+Pipe", caption="Push-fit insertion")
+    col2.image("https://via.placeholder.com/400x300.png?text=Lubricating", caption="Applying Huliot Lubricant")
 
-# --- EXPLANATION SECTIONS (Static text / Placeholders for photos) ---
-st.markdown("<h3 class='section-title'>Installation Explanations & Methods</h3>", unsafe_allow_html=True)
+# --- Slide 6: Bracketing & Support ---
+elif slide == "6. Bracketing & Support":
+    st.markdown('<h2 class="slide-title">Explain - Installation method during site visit.</h2>', unsafe_allow_html=True) #
+    st.write("**Maximum Bracketing Intervals for push-fit socket system for Huliot Pipes (Ultra Silent & HT Pro)**")
+    
+    # Placeholder for the PDF/Table images provided in the slides
+    st.image("https://via.placeholder.com/800x400.png?text=Table+1:+Bracketing+Intervals", use_container_width=True)
+    st.image("https://via.placeholder.com/800x400.png?text=Huliot+Round+Rubberized+Clamp", use_container_width=True)
 
-st.subheader("1. Pipe Cutting & Chamfering")
-st.info("Cut the Huliot pipe using suitable pipe cutter available in market or a fine-tooth saw that is suitably guided to guarantee a perpendicular cut. Chamfering and bevelling the Huliot pipe ends to an angle of roughly 15° to 30° using a suitable chamfered surface must be smooth to avoid damaging the socket when the pipe is inserted.")
+# --- Slide 7: Tools (Cutters) ---
+elif slide == "7. Tools (Cutters)":
+    st.markdown('<h2 class="slide-title">Proper Pipe Cutters & Chamfering Tools</h2>', unsafe_allow_html=True)
+    st.write("Explain - to use proper any pipe cutter & any chamfering tools available in market for fast, easy installation without any error /mistake") #
+    
+    col1, col2 = st.columns(2)
+    col1.image("https://via.placeholder.com/400x300.png?text=Blue+Pipe+Cutter+1")
+    col2.image("https://via.placeholder.com/400x300.png?text=Orange+Pipe+Cutter")
 
-st.subheader("2. Joining Method")
-st.info("Join the pipe and fittings together by inserting the end/spigot into the socket to maximum socket depth. Ensure that the inside of the socket, the seal and spigot/end of the pipe piece to be inserted are perfectly clean. Lubricate the spigot/pipe/fitting end and rubber ring with the appropriate Huliot Lubricant only.")
+# --- Slide 8: Trap Inlet Tools ---
+elif slide == "8. Trap Inlet Tools":
+    st.markdown('<h2 class="slide-title">Explain – Installation method – Hole saw cutter</h2>', unsafe_allow_html=True) #
+    st.write("Hole saw cutter for trap inlet opening size 44mm.") #
+    
+    col1, col2 = st.columns(2)
+    col1.image("https://via.placeholder.com/400x300.png?text=44mm+Hole+Saw")
+    col2.image("https://via.placeholder.com/400x300.png?text=Drill+with+Hole+Saw")
 
-st.subheader("3. Trap Inlet Opening")
-st.info("Use 44 mm size hole saw cutter - remove burs if any with fine-file inside trap to avoid any blockages during operation.")
-
-st.subheader("4. PRL Line Options")
-st.info("Huliot Standard: Using 45 deg or 90 deg bend at pressure relief line.")
-
-st.divider()
-
-# --- DRAINAGE CHECKLIST ---
-st.markdown("<h3 class='section-title'>Drainage Checklist Points (For Installation Process & Testing)</h3>", unsafe_allow_html=True)
-
-checklist_options = ["Yes", "No", "Not Applicable"]
-
-chk1 = st.radio("1. Pipe installation done as per drawing / site requirements / site in charge instruction approval", checklist_options, horizontal=True)
-chk2 = st.radio("2. Pipe routine is as per drawing / as per site requirements changes / site in charge instruction approval", checklist_options, horizontal=True)
-chk3 = st.radio("3. Pipe supports/ clamps provided with proper distance as per Huliot Table or as per site in charge instruction", checklist_options, horizontal=True)
-chk4 = st.radio("4. Trap support provided tightly", checklist_options, horizontal=True)
-chk5 = st.radio("5. Proper pipe slope maintains as per plumbing consultant or site requirements", checklist_options, horizontal=True)
-chk6 = st.radio("6. Open pipe end closed with end cap or any other materials", checklist_options, horizontal=True)
-chk7 = st.radio("7. Drainage - Water testing done in toilet with 500 mm or 1 meter height or as per site requirements with proper end cap", checklist_options, horizontal=True)
-chk8 = st.radio("8. During water testing water leakages found", checklist_options, horizontal=True)
-chk9 = st.radio("9. Leakages rectification done immediately", checklist_options, horizontal=True)
-chk10 = st.radio("10. Inside Traps cement mortar clean before fixing Grating/zali / shower channel", checklist_options, horizontal=True)
-
-st.divider()
-
-# --- SIGN-OFF SECTION ---
-st.markdown("<h3 class='section-title'>Report Sign-off</h3>", unsafe_allow_html=True)
-st.caption("Record should be maintain for each and every toilet installation checklist & testing with site supervisor sign")
-
-col6, col7 = st.columns(2)
-with col6:
-    prepared_by = st.text_input("Report Prepared by :")
-with col7:
-    approved_by = st.text_input("Report check and approved by :")
-
-# --- EXPORT / SAVE BUTTON ---
-if st.button("Save & Generate Report", type="primary"):
-    st.success("Report data captured successfully! (Next step: integrate python-pptx to push this data into the actual PPTX template).")
+# --- Slide 9: Trap Inlet Method ---
+elif slide == "9. Trap Inlet Method":
+    st.markdown('<h2 class="slide-title">Explain Installation method - Trap inlet opening</h2>', unsafe_allow_html=True)
