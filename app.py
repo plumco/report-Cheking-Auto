@@ -29,7 +29,7 @@ def extract_data_from_draft(draft_prs):
 
 def inject_into_template(template_file, extracted_data):
     """Pastes the extracted data into your perfect, unchanged template."""
-    # FIX: Force Streamlit to read the file as raw bytes to prevent KeyErrors
+    # Force Streamlit to read the file as raw bytes to prevent KeyErrors
     template_bytes = io.BytesIO(template_file.getvalue())
     prs = Presentation(template_bytes)
     
@@ -86,13 +86,28 @@ st.divider()
 if template_file and draft_file:
     if st.button("Generate 'Same to Same' Report", use_container_width=True):
         with st.spinner("Extracting data and injecting into template..."):
+            
+            # --- 1. Test the Draft File ---
             try:
-                # Step 1: Read the messy file (with byte conversion fix)
                 draft_bytes = io.BytesIO(draft_file.getvalue())
                 draft_prs = Presentation(draft_bytes)
+            except Exception:
+                st.error("🚨 The Messy Draft file is corrupted or not a true .pptx file.")
+                st.info("Fix: Open the draft in PowerPoint, click 'File > Save As', and choose 'PowerPoint Presentation (*.pptx)'.")
+                st.stop() 
+
+            # --- 2. Test the Template File ---
+            try:
+                template_bytes = io.BytesIO(template_file.getvalue())
+                template_prs = Presentation(template_bytes)
+            except Exception:
+                st.error("🚨 The Blank Template file is corrupted or not a true .pptx file.")
+                st.info("Fix: Open the template in PowerPoint, click 'File > Save As', and choose 'PowerPoint Presentation (*.pptx)'.")
+                st.stop() 
+
+            # --- 3. If both files are good, run the logic ---
+            try:
                 data = extract_data_from_draft(draft_prs)
-                
-                # Step 2: Paste into the perfect template
                 final_pptx = inject_into_template(template_file, data)
                 
                 st.success("Report Generated! It perfectly matches your sample.")
@@ -103,5 +118,4 @@ if template_file and draft_file:
                     mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
                 )
             except Exception as e:
-                st.error(f"An error occurred: {e}")
-                st.info("Make sure both files were saved directly out of PowerPoint as `.pptx` files.")
+                st.error(f"An error occurred during generation: {e}")
